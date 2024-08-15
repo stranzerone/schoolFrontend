@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaChalkboardTeacher, FaUserGraduate, FaSchool, FaRegCalendarAlt } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaUserGraduate, FaSchool, FaRegCalendarAlt, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import SeatsPieChart from '../Charts/SeatsPieChart';
 import StudentGrowthChart from '../Charts/StudentGrowthChart';
@@ -13,7 +13,7 @@ const PrincipalDashboard = () => {
         Principal Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Teachers Section */}
         <div className="bg-white shadow-lg rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
@@ -67,6 +67,20 @@ const PrincipalDashboard = () => {
           </p>
           <button onClick={() => navigate("/createTimetable")} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300">
             Create Timetable
+          </button>
+        </div>
+
+        {/* View Timetables Section */}
+        <div className="bg-white shadow-lg rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-semibold text-green-600">View Timetables</h2>
+            <FaCalendarAlt className="text-green-600 text-3xl" />
+          </div>
+          <p className="text-gray-600 mb-4">
+            View and manage all class timetables in one place.
+          </p>
+          <button onClick={() => navigate("/classTimeTable")} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300">
+            View Timetables
           </button>
         </div>
       </div>

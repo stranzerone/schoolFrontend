@@ -1,6 +1,7 @@
 import axios from 'axios';
+const BACKEND= process.env.REACT_APP_BACKEND
 
-const api = 'https://schoolbackend-vktl.onrender.com/classroom'; // Adjust the API base URL as needed
+const api = BACKEND+'/classroom'; // Adjust the API base URL as needed
 
 // Create a new classroom
 export const createClassroom = async (classroomData) => {
@@ -34,9 +35,10 @@ export const getAllClassrooms = async () => {
 // Get a single classroom by ID
 export const getClassroomById = async (id) => {
   try {
-    const response = await axios.get(`${api}/${id},{
+    const response = await axios.get(`${api}/${id}`,{
       withCredentials:true
-    }`);
+    });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error(`Error fetching classroom with ID ${id}:`, error);

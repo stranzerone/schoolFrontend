@@ -43,7 +43,7 @@ const StudentTable = () => {
             <th className="py-3 px-4 uppercase text-sm text-left">Roll No</th>
             <th className="py-3 px-4 uppercase text-sm text-left">Age</th>
             <th className="py-3 px-4 uppercase text-sm text-left">Class</th>
-            <th className="py-3 px-4 uppercase text-sm text-left">Actions</th>
+           {localStorage.getItem('status') ==='200' ? <th className="py-3 px-4 uppercase text-sm text-left">Actions</th>:null}
           </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@ const StudentTable = () => {
               <td className="py-3 px-4 text-gray-800">{student.rollNo}</td>
               <td className="py-3 px-4 text-gray-800">{student.age}</td>
               <td className="py-3 px-4 text-gray-800">{student.studentClass}</td>
-              <td className="py-3 px-4">
+          {localStorage.getItem('status') ==="200" ?    <td className="py-3 px-4">
                 <button
                   onClick={() => navigate(`/studentProfile/${student.rollNo}`)}
                   className="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 transition duration-300"
@@ -66,7 +66,7 @@ const StudentTable = () => {
                 >
                   Delete
                 </button>
-              </td>
+              </td> : null}
             </tr>
           ))}
         </tbody>

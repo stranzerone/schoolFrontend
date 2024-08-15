@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getAllClassrooms } from '../../Apis/ClassRoomApi'; // Update path as needed
 import { getClassTimeTable } from '../../Apis/TeacherScheduleApi';
-import { getTeacherById } from '../../Apis/TeacherApi.js';
 import { useNavigate } from 'react-router-dom';
 
 const ClassTimetableDisplay = () => {
   const [classrooms, setClassrooms] = useState([]);
   const [selectedClassroom, setSelectedClassroom] = useState(null);
   const [timetable, setTimetable] = useState([]);
-const navigate = useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchClassrooms = async () => {
       try {
@@ -27,14 +27,8 @@ const navigate = useNavigate()
     try {
       const timetableData = await getClassTimeTable(classroom.className); // Fetch timetable by className
       setTimetable(timetableData);
-
-      // Fetch teacher names
-   
-
- 
-
     } catch (error) {
-      console.error('Failed to fetch timetable or teacher names:', error);
+      console.error('Failed to fetch timetable:', error);
     }
   };
 
@@ -67,19 +61,22 @@ const navigate = useNavigate()
           ) : (
             timetable.map((timeBlock) => (
               <div key={timeBlock.slotId} className="p-4 rounded-lg border border-gray-200 bg-gray-50">
-                <h3 className="text-lg font-semibold text-gray-700">{timeBlock.startTime}</h3>
-                <p className="text-gray-600">{timeBlock.subject} - {[timeBlock.teacherName] || 'Unknown Teacher'}</p>
+                <h3 className="text-lg font-semibold text-gray-700">
+                  {timeBlock.startTime} - {timeBlock.endTime}
+                </h3>
+                <p className="text-gray-600">{timeBlock.subject}</p>
+                <p className="text-gray-600">{timeBlock.teacherName || 'Unknown Teacher'}</p>
               </div>
             ))
           )}
         </div>
-
+{localStorage.getItem('status' ==='200')?
         <button 
-                    className={`bg-green-300 px-4 py-2 rounded-lg shadow-md  hover:bg-slate-400 transition`}
-onClick={()=>navigate("/createTimetable")}
+          className={`bg-green-300 px-4 py-2 rounded-lg shadow-md hover:bg-slate-400 transition mt-4`}
+          onClick={() => navigate("/createTimetable")}
         >
-            Edit
-        </button>
+          Edit
+        </button>:null}
       </div>
     </div>
   );

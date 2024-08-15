@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUser, FaIdCard, FaChalkboard, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getStudentByRollNo, updateStudent } from '../../Apis/StudentApi'; // Adjust the import path if necessary
 
 const EditStudentDetails = () => {
-  // Dummy data
-  const initialStudentData = {
-    name: 'John Doe',
-    rollNo: '001',
-    class: '10th Grade',
-    section: 'A',
-    email: 'johndoe@example.com',
-    phone: '123-456-7890',
-    address: '123 Main St, Cityville',
-  };
+  const { rollNo } = useParams(); // Get rollNo from URL parameters
+  const navigate = useNavigate();
+  
+  const [studentData, setStudentData] = useState({
+    name: '',
+    rollNo: '',
+    class: '',
+    age: '',
+    email: '',
+    phone: '',
+    address: '',
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // State to hold the form data
-  const [studentData, setStudentData] = useState(initialStudentData);
+  // Fetch student data when the component mounts
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const data = await getStudentByRollNo(rollNo); // Fetch student data from API
+        setStudentData(data); // Set student data to state
+        setLoading(false); // Set loading to false once data is fetched
+      } catch (err) {
+        setError('Error fetching student data'); // Handle error
+        setLoading(false); // Set loading to false on error
+      }
+    };
+
+    fetchStudentData(); // Call function to fetch data
+  }, [rollNo]); // Re-fetch data if rollNo changes
 
   // Handle input changes
   const handleChange = (e) => {
@@ -26,11 +45,18 @@ const EditStudentDetails = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement the logic to save the updated details
-    console.log('Updated Student Data:', studentData);
+    try {
+      await updateStudent(rollNo, studentData); // Update student data through API
+      navigate(`/studentProfile/${rollNo}`); // Redirect to student profile page after update
+    } catch (err) {
+      setError('Error updating student data'); // Handle error
+    }
   };
+
+  if (loading) return <div>Loading...</div>; // Show loading message
+  if (error) return <div>{error}</div>; // Show error message
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-8 shadow-lg rounded-lg">
@@ -44,7 +70,7 @@ const EditStudentDetails = () => {
             <input
               type="text"
               name="name"
-              value={studentData.name}
+              value={studentData.studentName}
               onChange={handleChange}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
               required
@@ -61,6 +87,7 @@ const EditStudentDetails = () => {
               onChange={handleChange}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
               required
+              readOnly
             />
           </div>
         </div>
@@ -73,7 +100,7 @@ const EditStudentDetails = () => {
             <input
               type="text"
               name="class"
-              value={studentData.class}
+              value={studentData.studentClass}
               onChange={handleChange}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
               required
@@ -81,12 +108,12 @@ const EditStudentDetails = () => {
           </div>
           <div className="flex flex-col">
             <label className="block text-sm font-medium text-gray-700">
-              <FaBuilding className="inline-block mr-2 text-green-700" /> Section
+              <FaBuilding className="inline-block mr-2 text-green-700" /> Age
             </label>
             <input
               type="text"
-              name="section"
-              value={studentData.section}
+              name="age"
+              value={studentData.age}
               onChange={handleChange}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
               required
@@ -115,7 +142,7 @@ const EditStudentDetails = () => {
             <input
               type="text"
               name="phone"
-              value={studentData.phone}
+              value={studentData.phoneNumber}
               onChange={handleChange}
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
               required

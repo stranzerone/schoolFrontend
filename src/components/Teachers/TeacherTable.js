@@ -41,9 +41,14 @@ const TeacherTable = () => {
             <th className="py-3 px-6 text-left text-sm font-medium">Age</th>
             <th className="py-3 px-6 text-left text-sm font-medium">Subject</th>
             <th className="py-3 px-6 text-left text-sm font-medium">Salary</th>
-            <th className="py-3 px-6 text-left text-sm font-medium">Class No</th>
-            <th className="py-3 px-6 text-left text-sm font-medium">Actions</th>
-          </tr>
+{ localStorage.getItem('status')==='200'?     
+<div>
+<th className="py-3 px-6 text-left text-sm font-medium">TeacherID</th>
+ 
+   <th className="py-3 px-6 text-left text-sm font-medium">Actions</th>
+
+</div>
+:null}          </tr>
         </thead>
         <tbody className="text-gray-700">
           {teachers.map((teacher, index) => (
@@ -52,15 +57,22 @@ const TeacherTable = () => {
               <td className="py-3 px-6 text-sm">{teacher.age}</td>
               <td className="py-3 px-6 text-sm">{teacher.subject}</td>
               <td className="py-3 px-6 text-sm">{teacher.salary}</td>
-              <td className="py-3 px-6 text-sm">{teacher.className}</td>
-              <td className="py-3 px-6 text-sm">
-                <button
-                  onClick={() => handleDelete(teacher.teacherId)}
-                  className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition duration-300 ml-2"
-                >
-                  Delete
-                </button>
+   
+              {localStorage.getItem('status') ==='200' ?
+              <div>
+  <td className="py-3 px-6 text-sm">{teacher.teacherId}</td>
+                <td className="py-3 px-6 text-sm">
+                  <button
+              onClick={() => handleDelete(teacher.teacherId)}
+              className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition duration-300 ml-2"
+            >
+              Delete
+           </button>
+
               </td>
+              </div>
+           
+              :null}
             </tr>
           ))}
         </tbody>

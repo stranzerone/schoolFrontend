@@ -1,6 +1,7 @@
 import axios from "axios";
+const BACKEND= process.env.REACT_APP_BACKEND
 
-const api = "https://schoolbackend-vktl.onrender.com/teachers";
+const api = BACKEND+"/teachers";
 
 // Get all teachers
 
@@ -21,7 +22,9 @@ export const teacherLogin = async ({teacherId,dateOfBirth}) => {
 
 export const principalLogin = async ({username,password}) => {
   try {
-    const response = await axios.post(`${api}/principalLogin`,{username,password});
+    const response = await axios.post(`${api}/principalLogin`,{username,password},{
+      withCredentials:true
+    });
     return response;
   } catch (error) {
     console.error("Error fetching students:", error);
@@ -37,7 +40,7 @@ export const principalLogin = async ({username,password}) => {
 export const getAllTeachers = async () => {
   try {
     const response = await axios.get(`${api}`,{
-      withCredentials:true
+   withCredentials:true
     });
     console.log(response)
     return response.data;
@@ -67,7 +70,7 @@ export const createTeacher = async (teacherData) => {
     const response = await axios.post(`${api}`, teacherData,{
       withCredentials:true
     });
-    return response.status;
+    return response;
   } catch (error) {
     console.error("Error creating teacher:", error);
     throw error;

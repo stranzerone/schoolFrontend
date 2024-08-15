@@ -2,27 +2,66 @@ import React, { useState, useEffect } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
 import { MdMenu, MdClose } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { getCookie } from './cookieUtils';
+import { CiLogout } from "react-icons/ci";
+
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(''); // To store decoded user info
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = getCookie('token'); // Check if the token cookie exists
-    setIsLoggedIn(!!token); // Set logged-in status based on token presence
-  }, []);
+
+
+  useEffect(()=>{
+const user = localStorage.getItem('status') || 404
+
+if(user){
+  setUserInfo(user)
+  setIsLoggedIn(true)
+}
+
+  },[])
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLogout = () => {
-    // Perform logout actions, e.g., delete the cookie and redirect
-    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    setIsLoggedIn(false); // Update state
-    navigate('/login'); // Redirect to login page
+ 
+  const handleNavigate = (path) => {
+    navigate(path);
+    setIsOpen(false); // Close menu after navigation
   };
+
+
+  function homeNavigate() {
+    console.log(userInfo);
+  
+    switch(userInfo) {
+      case '200':
+        handleNavigate('/principalDashboard');
+        break;
+      case '201':
+        handleNavigate('/teacherDashboard');
+        break;
+      case '202':
+        handleNavigate('/studentDashboard');
+        break;
+      default:
+        handleNavigate('/');
+    }
+  
+  }
+  
+
+  const handleLogout = () => {
+    // Perform logout actions
+    localStorage.removeItem('status')
+    setIsLoggedIn(false); // Update state
+
+    navigate('/'); // Redirect to login page
+  };
+
 
   return (
     <nav className="bg-green-600 text-white shadow-lg w-full z-50">
@@ -37,7 +76,7 @@ const Navbar = () => {
         </div>
         <div className="hidden md:flex space-x-6">
           <button
-            onClick={() => navigate('/')}
+            onClick={homeNavigate}
             className="hover:text-green-300 transition duration-300"
           >
             Home
@@ -62,7 +101,23 @@ const Navbar = () => {
           </button>
         </div>
         <div className="hidden md:flex items-center space-x-4">
-          <FaUserAlt className="text-white hover:text-green-300 transition duration-300" />
+          {isLoggedIn && userInfo ? (
+            <div className='flex items-center justify-center gap-3'>
+            <button
+            onClick={handleLogout}
+            className=" bg-white flex text-green-700 px-4 py-2 rounded-full shadow hover:bg-green-800 hover:text-white transition duration-300"
+          >
+            <CiLogout className='font-extrabold' />
+      
+          </button>
+       {userInfo === "200"? "Principal":userInfo==="201"?"Teacher":"Student"}
+
+</div>
+
+
+          ) : (
+            <FaUserAlt className="text-white hover:text-green-300 transition duration-300" />
+          )}
         </div>
         <div className="md:hidden">
           <button onClick={toggleMenu}>
@@ -78,28 +133,28 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-green-600 text-white space-y-4 p-4 transition duration-500">
           <button
-            onClick={() => navigate('/about')}
+            onClick={homeNavigate}
             className="block hover:text-green-300 transition duration-300"
           >
-            About Us
+            Home
           </button>
           <button
-            onClick={() => navigate('/admissions')}
+            onClick={() => handleNavigate('/allStudents')}
             className="block hover:text-green-300 transition duration-300"
           >
-            Admissions
+            Students
           </button>
           <button
-            onClick={() => navigate('/academics')}
+            onClick={() => handleNavigate('/allTeachers')}
             className="block hover:text-green-300 transition duration-300"
           >
-            Academics
+            Teachers
           </button>
           <button
-            onClick={() => navigate('/contact')}
+            onClick={() => handleNavigate('/classRoom')}
             className="block hover:text-green-300 transition duration-300"
           >
-            Contact
+            ClassRooms
           </button>
           {isLoggedIn ? (
             <button
@@ -110,7 +165,7 @@ const Navbar = () => {
             </button>
           ) : (
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => handleNavigate('/')}
               className="block bg-white text-green-700 px-4 py-2 rounded-full shadow hover:bg-green-800 hover:text-white transition duration-300"
             >
               Login

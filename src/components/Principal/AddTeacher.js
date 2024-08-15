@@ -4,7 +4,6 @@ import { createTeacher } from '../../Apis/TeacherApi'; // Adjust import path as 
 
 const AddTeacher = () => {
   // Teacher state
-  const [teacherId, setTeacherId] = useState('');
   const [teacherName, setTeacherName] = useState('');
   const [age, setAge] = useState('');
   const [subject, setSubject] = useState('');
@@ -24,7 +23,7 @@ const AddTeacher = () => {
 
     try {
       const response = await createTeacher({
-        teacherId,
+       
         teacherName,
         age,
         subject,
@@ -34,15 +33,15 @@ const AddTeacher = () => {
          // Include class information
       });
 
-      if (response === 201) {
-        window.alert("Teacher added successfully!");
-        setTeacherId('');
+      if (response.status === 201) {
         setTeacherName('');
         setAge('');
         setSubject('');
         setSalary('');
         setDateOfBirth('');
         setClassName(''); // Clear class name field
+
+       window. alert(`Teacher added successfully TeacherID : ${response.data.teacherId} `)
       }
     } catch (error) {
       setError('Failed to add teacher. Please try again.');
@@ -57,17 +56,7 @@ const AddTeacher = () => {
       <h2 className="text-2xl font-bold text-green-600 mb-6 text-center">Add New Teacher</h2>
       <form onSubmit={handleSubmit}>
         {/* Teacher ID */}
-        <div className="mb-4 flex items-center">
-          <FaUser className="text-green-600 mr-3" />
-          <input
-            type="text"
-            placeholder="Teacher ID"
-            value={teacherId}
-            onChange={(e) => setTeacherId(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            required
-          />
-        </div>
+      
 
         {/* Teacher Name */}
         <div className="mb-4 flex items-center">
@@ -134,18 +123,7 @@ const AddTeacher = () => {
         </div>
 
         {/* Class Name */}
-        <div className="mb-4 flex items-center">
-          <FaSchool className="text-green-600 mr-3" />
-          <input
-            type="text"
-            placeholder="Class Name"
-            value={className}
-            onChange={(e) => setClassName(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            required
-          />
-        </div>
-
+     
         {/* Class Grade */}
     
 

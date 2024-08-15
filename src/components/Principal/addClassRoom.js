@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { FaChalkboard, FaChair, FaClock } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaChalkboard, FaChair, FaClock, FaUserTie } from 'react-icons/fa';
 import { createClassroom } from '../../Apis/ClassRoomApi';
+import { getAllTeachers } from '../../Apis/TeacherApi'; // Import your getAllTeachers function
+
 const ClassroomCreation = () => {
   const [className, setClassName] = useState('');
   const [totalSeats, setTotalSeats] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [section, setSection] = useState('');
   const [openDays, setOpenDays] = useState({
     mon: false,
     tue: false,
@@ -15,12 +18,36 @@ const ClassroomCreation = () => {
     sat: false,
     sun: false,
   });
+  const [classTeacher, setClassTeacher] = useState('');
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    // Fetch teachers when component mounts
+    const fetchTeachers = async () => {
+      try {
+        const teachersData = await getAllTeachers();
+        console.log(teachersData)
+        setTeachers(teachersData);
+      } catch (error) {
+        console.error('Failed to fetch teachers', error);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
 
   const handleDayChange = (day) => {
     setOpenDays((prevDays) => ({
       ...prevDays,
       [day]: !prevDays[day],
     }));
+  };
+
+  const handleSectionChange = (e) => {
+    const value = e.target.value.toUpperCase();
+    if (/^[A-Z]{0,2}$/.test(value)) {
+      setSection(value);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -30,7 +57,9 @@ const ClassroomCreation = () => {
       totalSeats,
       startTime,
       endTime,
+      section,
       openDays,
+      classTeacher, // Include classTeacher in the request
     };
 
     try {
@@ -41,6 +70,8 @@ const ClassroomCreation = () => {
       setTotalSeats('');
       setStartTime('');
       setEndTime('');
+      setSection('');
+      setClassTeacher('');
       setOpenDays({
         mon: false,
         tue: false,
@@ -124,6 +155,47 @@ const ClassroomCreation = () => {
                   onChange={(e) => setEndTime(e.target.value)}
                   required
                 />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full px-3">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Section
+              </label>
+              <input
+                type="text"
+                className="bg-gray-200 text-gray-700 border-none focus:outline-none p-2 rounded w-full"
+                value={section}
+                onChange={handleSectionChange}
+                placeholder="Enter up to 2 letters (A-Z)"
+                maxLength={2}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full px-3">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Class Teacher
+              </label>
+              <div className="flex items-center bg-gray-200 p-2 rounded">
+                <FaUserTie className="text-gray-500 mr-2" />
+                <select
+                  value={classTeacher}
+                  onChange={(e) => setClassTeacher(e.target.value)}
+                  className="bg-gray-200 text-gray-700 border-none focus:outline-none w-full"
+                  required
+                >
+                  <option value="">Select Teacher</option>
+                  {teachers.map((teacher) => (
+                    <option key={teacher.id} value={teacher.name}>
+                      {teacher.teacherName}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
