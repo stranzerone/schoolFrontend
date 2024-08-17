@@ -6,7 +6,7 @@ const TeacherDashboard = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
-      <h1 className="text-4xl font-bold text-gray-800 text-center mb-8">
+      <h1 className="text-4xl font-bold text-green-800 text-center mb-8">
         Teacher Dashboard
       </h1>
 

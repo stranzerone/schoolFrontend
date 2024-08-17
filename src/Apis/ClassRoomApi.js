@@ -62,9 +62,9 @@ export const updateClassroom = async (id, classroomData) => {
 // Delete a classroom by ID
 export const deleteClassroom = async (id) => {
   try {
-    const response = await axios.delete(`${api}/${id},{
+    const response = await axios.delete(`${api}/${id}`,{
       withCredentials:true
-    }`);
+    });
     return response.data;
   } catch (error) {
     console.error(`Error deleting classroom with ID ${id}:`, error);

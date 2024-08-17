@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUser, FaIdCard, FaBirthdayCake, FaChalkboardTeacher, FaPlus } from 'react-icons/fa';
 import { createStudent, getAllStudentsByClassName } from '../../Apis/StudentApi';
 import { getAllClassrooms } from '../../Apis/ClassRoomApi';
-
+import Notification from '../common/Notification';
 const AddStudent = () => {
   const [studentName, setStudentName] = useState('');
   const [rollNo, setRollNo] = useState('');
@@ -12,6 +12,7 @@ const AddStudent = () => {
   const [error, setError] = useState('');
   const [classrooms, setClassrooms] = useState([]);
   const [seatsAvailable, setSeatsAvailable] = useState(0);
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   useEffect(() => {
     // Fetch all classrooms when the component mounts
@@ -49,11 +50,15 @@ const AddStudent = () => {
               setSeatsAvailable(0);
             }
           } else {
-            setError('Selected class not found');
+            setNotification({ message: 'Selected class not found', type: 'error' });
+
+            // setError('Selected class not found');
           }
         } catch (error) {
           console.error('Failed to fetch students', error);
-          setError('Failed to generate roll number');
+          setNotification({ message: 'Failed to generate roll number', type: 'error' });
+
+          // setError('Failed to generate roll number');
         }
       }
     };
@@ -83,20 +88,33 @@ const AddStudent = () => {
         setStudentName('');
         setAge('');
         setStudentClass('');
-      
+        setNotification({ message: `Student added successfully! with studentID ${response.data.studentId} added`, type: 'success' });
+
         alert(`Student added successfully! with studentID ${response.data.studentId} added` );
       }
     } catch (error) {
       setError('Failed to add student. Please try again.');
+      setNotification({ message: `It seems you are unauthorized `, type: 'error' });
+
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCloseNotification = () => {
+    setNotification({ message: '', type: '' });
+  };
+
+
   return (
     <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
+     
+     {notification.message && (
+        <Notification message={notification.message} type={notification.type} onClose={handleCloseNotification} />
+      )}
       <h2 className="text-2xl font-bold text-green-600 mb-6 text-center">Add New Student</h2>
+     
       <form onSubmit={handleSubmit}>
         <div className="mb-4 flex items-center">
           <FaUser className="text-green-600 mr-3" />

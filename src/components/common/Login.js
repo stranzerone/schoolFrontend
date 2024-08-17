@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { loginStudent } from '../../Apis/StudentApi';
 import { teacherLogin } from '../../Apis/TeacherApi';
 import { principalLogin } from '../../Apis/TeacherApi';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaCalendarAlt } from 'react-icons/fa'; // Icons for form fields
 import { RingLoader } from 'react-spinners'; // Import a loader component
-
+import Notification from './Notification';
 const LoginPage = () => {
   const [userType, setUserType] = useState('teacher');
   const [rollNo, setRollNo] = useState(''); // For Student
@@ -15,11 +15,29 @@ const LoginPage = () => {
   const [username, setUsername] = useState(''); // For Principal
   const [password, setPassword] = useState(''); // For Principal
   const [loading, setLoading] = useState(false); // Add loading state
+  const [timer, setTimer] = useState(50); // Timer state
+  const [warning, setWarning] = useState(''); // Warning state for invalid credentials
   const navigate = useNavigate();
+  const [notification, setNotification] = useState({ message: '', type: '' });
+
+  useEffect(() => {
+    let interval;
+    if (loading && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setLoading(false);
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [loading, timer]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     setLoading(true); // Show loader
+    setWarning(''); // Clear any previous warnings
+    setTimer(50); // Reset timer
 
     try {
       let response;
@@ -43,23 +61,53 @@ const LoginPage = () => {
         navigate('/teacherDashboard');
       } 
       if (response && response.status === 202) {
-        navigate('/studentProfile/' + rollNo);
+        navigate('/studentDashboard');
       } 
+      if (response && response.status === 210) {
+        setNotification({ message: 'Invalid Credentials', type: 'error' });
+
+      }
     } catch (error) {
+      setNotification({ message: 'Something went wrong while login.', type: 'error' });
       console.error('Login error:', error);
     } finally {
       setLoading(false); // Hide loader
     }
   };
 
+  const handleGuestLogin = () => {
+    setUserType('student');
+    setRollNo('A1');
+    setStudentId('137206');
+    handleLogin({
+      preventDefault: () => {}, // Prevent the default form submission behavior
+    });
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ message: '', type: '' });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 p-6">
-      <div className="bg-white shadow-2xl rounded-lg p-8 max-w-md w-full relative">
-        {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80">
-            <RingLoader color="#3498db" size={60} />
+         {notification.message && (
+        <Notification message={notification.message} type={notification.type} onClose={handleCloseNotification} />
+      )}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60">
+          <div className="flex flex-col items-center">
+            <RingLoader color="#fff" size={80} />
+            <p className="text-white text-xl mt-4">Logging in... Please wait</p>
           </div>
-        ) : null}
+        </div>
+      )}
+      <div className="bg-white shadow-2xl rounded-lg p-8 max-w-md w-full relative z-10">
+        {warning && (
+          <div className="text-red-600 text-center mb-4">{warning}</div>
+        )}
+        <div className="text-center text-gray-700 text-sm mb-4">
+          {loading && `Time remaining: ${timer} seconds`}
+        </div>
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
           Login
         </h1>
@@ -191,12 +239,17 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
-            disabled={loading} // Disable button while loading
+            className="w-full bg-blue-600 text-white p-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-200"
           >
-            {loading ? 'Logging in...' : `Login as ${userType.charAt(0).toUpperCase() + userType.slice(1)}`}
+            Login
           </button>
         </form>
+        <button
+          onClick={handleGuestLogin}
+          className="mt-4 w-full bg-green-600 text-white p-3 rounded-lg shadow-md hover:bg-green-700 transition duration-200"
+        >
+          Guest Login
+        </button>
       </div>
     </div>
   );

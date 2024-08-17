@@ -54,41 +54,41 @@ const SingleClassPage = () => {
 
   if(classData){
   return (
-    <div className="w-full h-screen flex p-6 bg-gray-100">
-      <div className="w-full pr-6">
-        <div className='flex items-center justify-between'>
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+    <div className="w-full h-screen flex flex-col p-4 bg-gray-100">
+      <div className="w-full mb-4">
+        <div className='flex flex-col md:flex-row md:items-center justify-between'>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0">
             Class Room: {classData?.className || "Not FOUND"}
           </h2>
-          <h2>Class Teacher: {  classData.classTeacher}</h2>
+          <h2 className="text-lg md:text-xl">Class Teacher: {classData.classTeacher}</h2>
         </div>
         
         {/* Seat Count */}
-        <div className="bg-white items-center justify-around flex shadow-lg rounded-lg p-4 mb-6">
+        <div className="bg-white flex flex-col md:flex-row items-center justify-between shadow-lg rounded-lg p-4 mb-6">
           <p className="text-gray-600">Total Seats: {totalSeats}</p>
           <div className="flex items-center space-x-2">
-            <RiSofaLine className="text-3xl text-green-500" />
-            <p className="text-sm text-gray-600">Available: {availableSeats}</p>
+            <RiSofaLine className="text-2xl md:text-3xl text-green-500" />
+            <p className="text-sm md:text-base text-gray-600">Available: {availableSeats}</p>
           </div>
           <div className="flex items-center space-x-2">
-            <RiSofaLine className="text-3xl text-red-300" />
-            <p className="text-sm text-gray-600">Occupied: {occupiedSeatsCount}</p>
+            <RiSofaLine className="text-2xl md:text-3xl text-red-300" />
+            <p className="text-sm md:text-base text-gray-600">Occupied: {occupiedSeatsCount}</p>
           </div>
-          <div>
-            Active Time : {classData.startTime} to {classData.endTime}
+          <div className="text-sm md:text-base">
+            Active Time: {classData.startTime} to {classData.endTime}
           </div>
         </div>
       
         {/* Display Seat Layout */}
-        <div className='flex p-8'>
-          <div className="bg-white p-4 shadow-lg rounded-lg w-2/3">
+        <div className='flex flex-col md:flex-row p-4 md:p-8'>
+          <div className="bg-white p-4 shadow-lg rounded-lg w-full md:w-2/3 mb-4 md:mb-0">
             <p className="text-lg font-semibold mb-2">Classroom Layout:</p>
-            <div className='flex items-center justify-center p-4 bg-red-200 rounded-lg'>
-              <BiChalkboard className='text-2xl text-center'/>
+            <div className='flex items-center justify-center p-4 bg-red-200 rounded-lg mb-4'>
+              <BiChalkboard className='text-2xl' />
               Screen
             </div>
 
-            <div className="flex flex-wrap">
+            <div className="grid grid-cols-4 gap-2 md:grid-cols-6">
               {Array.from({ length: totalSeats }, (_, index) => {
                 const seatNumber = index + 1;
                 const studentName = occupiedSeats.get(seatNumber);
@@ -96,12 +96,12 @@ const SingleClassPage = () => {
                 return (
                   <div
                     key={className + seatNumber}
-                    className={`w-12 h-12 flex items-center justify-center border rounded-md mr-2 mb-2 cursor-pointer`}
+                    className={`w-12 h-12 flex items-center justify-center border rounded-md cursor-pointer`}
                     title={studentName || "Available" && classData.section+seatNumber}
                     onClick={() => handleSeatClick(seatNumber)}
                   >
                     <RiSofaLine
-                      className={`text-3xl ${studentName ? 'text-green-500' : 'text-red-300'}`}
+                      className={`text-2xl md:text-3xl ${studentName ? 'text-green-500' : 'text-red-300'}`}
                     />
                   </div>
                 );
@@ -109,18 +109,14 @@ const SingleClassPage = () => {
             </div>
           </div>
 
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/3'>
             <SingleClassTimetablePage className={className} />
           </div>
         </div>
       </div>
-
-      {/* Conditionally render SingleSeatDetail */}
-
     </div>
   );
-}
+  }
 };
-
 
 export default SingleClassPage;
