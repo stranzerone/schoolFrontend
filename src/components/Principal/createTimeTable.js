@@ -5,6 +5,7 @@ import { getAllTeachers } from '../../Apis/TeacherApi';
 import { getAllClassrooms } from '../../Apis/ClassRoomApi';
 import { createTimetable, deleteTimetable, getTimetableById } from '../../Apis/TeacherScheduleApi.js';
 import Notification from '../common/Notification.js';
+import NotAuthorized from '../common/NotAutorizedPage.js';
 
 const CreateClassroomPage = () => {
   const [classrooms, setClassrooms] = useState([]);
@@ -151,7 +152,8 @@ const CreateClassroomPage = () => {
 
     return timeBlocks;
   };
-
+  
+if(['200','201'].includes(localStorage.getItem('status'))){
   return (
     <div className="container mx-auto p-4 md:p-6 bg-gray-100">
       <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center md:text-left">Create Timetable</h1>
@@ -268,6 +270,10 @@ const CreateClassroomPage = () => {
       </div>
     </div>
   );
+}
+return(
+  <NotAuthorized />
+)
 };
 
 export default CreateClassroomPage;

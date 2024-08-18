@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaChalkboardTeacher, FaDollarSign, FaCalendarAlt, FaBirthdayCake, FaPlus, FaSchool } from 'react-icons/fa'; // Added FaSchool icon
 import { createTeacher } from '../../Apis/TeacherApi'; // Adjust import path as needed
+import NotAuthorized from '../common/NotAutorizedPage';
 
 const AddTeacher = () => {
   // Teacher state
@@ -50,6 +51,8 @@ const AddTeacher = () => {
       setLoading(false);
     }
   };
+
+  if(localStorage.getItem('status') =='200'){
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
@@ -139,6 +142,13 @@ const AddTeacher = () => {
       </form>
     </div>
   );
+}
+return(
+  <div>
+    <NotAuthorized />
+  </div>
+ 
+)
 };
 
 export default AddTeacher;

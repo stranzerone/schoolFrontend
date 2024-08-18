@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaChalkboard, FaChair, FaClock, FaUserTie } from 'react-icons/fa';
 import { createClassroom } from '../../Apis/ClassRoomApi';
 import { getAllTeachers } from '../../Apis/TeacherApi'; // Import your getAllTeachers function
+import NotAuthorized from '../common/NotAutorizedPage';
 
 const ClassroomCreation = () => {
   const [className, setClassName] = useState('');
@@ -86,6 +87,7 @@ const ClassroomCreation = () => {
     }
   };
 
+  if(localStorage.getItem('status') =='200'){
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6 space-y-6">
@@ -231,6 +233,8 @@ const ClassroomCreation = () => {
       </div>
     </div>
   );
+}
+return <NotAuthorized />
 };
 
 export default ClassroomCreation;

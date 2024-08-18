@@ -3,6 +3,7 @@ import { FaUser, FaIdCard, FaBirthdayCake, FaChalkboardTeacher, FaPlus } from 'r
 import { createStudent, getAllStudentsByClassName } from '../../Apis/StudentApi';
 import { getAllClassrooms } from '../../Apis/ClassRoomApi';
 import Notification from '../common/Notification';
+import NotAuthorized from '../common/NotAutorizedPage';
 const AddStudent = () => {
   const [studentName, setStudentName] = useState('');
   const [rollNo, setRollNo] = useState('');
@@ -106,7 +107,7 @@ const AddStudent = () => {
     setNotification({ message: '', type: '' });
   };
 
-
+if(['200','201'].includes(localStorage.getItem('status'))){
   return (
     <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
      
@@ -184,6 +185,10 @@ const AddStudent = () => {
       </form>
     </div>
   );
+}
+return(
+  <NotAuthorized />
+)
 };
 
 export default AddStudent;

@@ -140,9 +140,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaUser />
-                </div>
+              
               </div>
               <div className="mb-4 relative">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -156,9 +154,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaLock />
-                </div>
+            
               </div>
             </>
           )}
@@ -177,9 +173,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaUser />
-                </div>
+           
               </div>
               <div className="mb-4 relative">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -193,9 +187,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaCalendarAlt />
-                </div>
+            
               </div>
             </>
           )}
@@ -214,9 +206,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaUser />
-                </div>
+         
               </div>
               <div className="mb-4 relative">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -230,9 +220,7 @@ const LoginPage = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300"
                   required
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                  <FaLock />
-                </div>
+            
               </div>
             </>
           )}
